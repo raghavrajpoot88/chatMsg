@@ -54,11 +54,14 @@ button:hover {
 input.ng-invalid.ng-touched{
     border: red 2px solid;
 }
+input.ng-valid.ng-touched{
+    border: lightgreen 2px solid;
+}
 .toNavigate{
     cursor: pointer;
     font-size: 14px;
     text-decoration: none;
-    text-align: center;
+    text-align:end;
     padding: 0px;
 }
 .containers{

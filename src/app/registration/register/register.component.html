@@ -1,6 +1,6 @@
 <div class="containers d-flex flex-column align-item-center">
     <div>
-        <form  [formGroup]="registerform" (ngSubmit)="onSubmit()"  class="signup" >
+        <form  [formGroup]="registerform" (ngSubmit)="onSubmit(registerform.value)"  class="signup" >
             <!--(ngSubmit)="onSubmit(registerform.value)" -->
             <div class="">
                 <div>
@@ -18,13 +18,17 @@
                 <div>
                     <label for="name" >Name</label>
                     <input type="text" formControlName="Name" placeholder="Enter your name">
+                    <div>
+                        <span style="color: red;" *ngIf="registerform.get('Name')?.invalid && registerform.get('Name')?.touched"> Please Enter Email</span>
+                        <span style="color: lightgreen;"*ngIf="registerform.get('Name')?.valid && registerform.get('Name')?.touched"></span>
+                    </div>
                 </div>
                 <div>
                     <label for="password" >Password</label>
                     <input type="password" formControlName="Password" placeholder="Enter password">
                 </div>
                 <button>Submit</button>
-                <p class="toNavigate">  <span class="">Already have account?</span><a routerLink="login" style="text-decoration: none;"> Log in</a></p>
+                <p class="toNavigate">  <span class="">Already have account?</span><a routerLink="../login" style="text-decoration: none;"> Log in</a></p>
 
             </div>
         </form>

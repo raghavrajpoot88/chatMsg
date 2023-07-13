@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { userInfo } from '../model/userInfo';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { userInfo } from '../../model/userInfo';
 import { HttpClient } from '@angular/common/http';
-import { RegisterService } from '../../services/register.service';
+import { UserService } from '../../services/user.service';
 
 
 @Component({
@@ -10,31 +10,27 @@ import { RegisterService } from '../../services/register.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
-  // registerform!: FormGroup;
-  registerform=this._fb.group({
-    Email:[null,[Validators.required,Validators.email]],
-    Name:['',Validators.required],
-    Password:['',Validators.required],
-  })
-  constructor(private _fb:FormBuilder, private http:HttpClient,private signUp:RegisterService){}
-  // ngOnInIt():void{
-  //   this.registerform=this._fb.group({
-  //     Email:'',
-  //     Name:'',
-  //     Password:'',
+export class RegisterComponent implements OnInit{
+  registerform!: FormGroup;
+  // registerform=this._fb.group({
+  //   Email:[null,[Validators.required,Validators.email]],
+  //   Name:['',Validators.required],
+  //   Password:['',Validators.required],
+  // })
+  constructor(private _fb:FormBuilder, private http:HttpClient,private signUp:UserService){}
+  ngOnInit(): void {
+    this.registerform=new FormGroup({
+      Email:new FormControl(null,[Validators.email,Validators.required]) ,
+      Name:new FormControl(null,Validators.required) ,
+      Password:new FormControl(null,Validators.required) 
 
-  //   })
-  // }
-  get f()
-{
-    return this._fb.group;
-}
-
-  onSubmit():void{
-    // data:userInfo
+    })
+  }
+  onSubmit(data:userInfo):void{
     console.log(this.registerform.value);
-    // this.signUp.userRegistration(data);
+    this.signUp.userRegistration(data).subscribe(x=>
+      console.log(x)
+      )
     
   }
 }

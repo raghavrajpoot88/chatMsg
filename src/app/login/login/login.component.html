@@ -1,1 +1,28 @@
-<p>login works!</p>
+<div class="containers d-flex flex-column align-item-center">
+    <div>
+        <form  [formGroup]="loginform" (ngSubmit)="onSubmitLogin(loginform.value)"  class="signup" >
+            <!--(ngSubmit)="onSubmit(registerform.value)" -->
+            <div class="">
+                <div>
+                    <h3 class="heading">Login</h3>
+                    <p class="subtext">Welcome to Chating world</p>
+                </div>
+                <div>
+                    <label for="email" >Email</label>
+                    <input type="email" formControlName="Email" placeholder="Enter Email Id">
+                    <div>
+                        <span style="color: red;" *ngIf="loginform.get('Email')?.invalid && loginform.get('Email')?.touched"> Please Enter Email</span>
+                        <span style="color: lightgreen;"*ngIf="loginform.get('Email')?.valid && loginform.get('Email')?.touched"></span>
+                    </div>
+                </div>
+                <div>
+                    <label for="password" >Password</label>
+                    <input type="password" formControlName="Password" placeholder="Enter password">
+                </div>
+                <button>Submit</button>
+                <p class="toNavigate">  <span class="">Don't have account?</span><a routerLink="../register" style="text-decoration: none;"> Sign-up</a></p>
+
+            </div>
+        </form>
+    </div>
+</div>
