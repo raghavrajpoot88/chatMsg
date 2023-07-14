@@ -18,6 +18,10 @@
                 <div>
                     <label for="password" >Password</label>
                     <input type="password" formControlName="Password" placeholder="Enter password">
+                    <div>
+                        <span style="color: red;" *ngIf="loginform.get('Password')?.invalid &&loginform.get('Password')?.touched"> Please enter minimum 8 character </span>
+                        <span style="color: lightgreen;"*ngIf="loginform.get('Password')?.valid && loginform.get('Password')?.touched"></span>
+                    </div>
                 </div>
                 <button>Submit</button>
                 <p class="toNavigate">  <span class="">Don't have account?</span><a routerLink="../register" style="text-decoration: none;"> Sign-up</a></p>

@@ -21,9 +21,9 @@ export class RegisterComponent implements OnInit{
   ngOnInit(): void {
     this.registerform=new FormGroup({
       Email:new FormControl(null,[Validators.email,Validators.required]) ,
-      Name:new FormControl(null,Validators.required) ,
-      Password:new FormControl(null,Validators.required) 
-
+      Name:new FormControl(null,[Validators.required,Validators.minLength(5)]) ,
+      Password:new FormControl(null,[Validators.required,Validators.minLength(8)]) 
+      // ,Validators.pattern(new RegExp("^(?=.*[A-Z])(?=.*[!@#\$%\^&\*])(?=.{9,}))"))
     })
   }
   onSubmit(data:userInfo):void{
