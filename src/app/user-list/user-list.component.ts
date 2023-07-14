@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { Observable } from 'rxjs';
 import { userList } from '../model/userInfo';
@@ -8,14 +8,17 @@ import { userList } from '../model/userInfo';
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent {
+export class UserListComponent implements OnInit {
   list:userList[]=[];
   constructor(private service:UserService ){}
+  ngOnInit(): void {
+    this.getList();
+  }
   getList(){
     this.service.userList().subscribe(list=>{
       console.log(list);
       this.list=list;
-      console.log(this.list[2].name);
+      // console.log(this.list[2].name);
       
     })
   }

@@ -11,7 +11,7 @@
                     <label for="email" >Email</label>
                     <input type="email" formControlName="Email" placeholder="Enter Email Id">
                     <div>
-                        <span style="color: red;" *ngIf="loginform.get('Email')?.invalid && loginform.get('Email')?.touched"> Please Enter Email</span>
+                        <span style="color: red;" *ngIf="loginform.get('Email')?.invalid && loginform.get('Email')?.touched"> Please Enter Valid Email</span>
                         <span style="color: lightgreen;"*ngIf="loginform.get('Email')?.valid && loginform.get('Email')?.touched"></span>
                     </div>
                 </div>
