@@ -28,6 +28,7 @@ constructor(private service:UserService){}
       console.log(x)
       this.loginList=[x]
       console.log(this.loginList);
+      // console.log(this.loginform.get('Email')?.value);
       
       localStorage.setItem('token',x.token);
       

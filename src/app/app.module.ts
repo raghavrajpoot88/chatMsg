@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login/login.component';
 import { UserListComponent } from './user-list/user-list.component';
+import { ConversationHistoryComponent } from './conversation-history/conversation-history.component';
 
 
 
@@ -16,7 +17,8 @@ import { UserListComponent } from './user-list/user-list.component';
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    UserListComponent
+    UserListComponent,
+    ConversationHistoryComponent
   ],
   imports: [
     BrowserModule,

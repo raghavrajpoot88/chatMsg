@@ -1,3 +1,5 @@
+import { Expansion } from "@angular/compiler";
+
 export interface userInfo
 {
     Email:string|null,
@@ -10,9 +12,22 @@ export interface loginInfo{
     token:any,
 }
 export interface userList{
-    userId: string;
-    email: string;
-    name: string;
-    passwordHash: string;
-    passwordSalt: string;
+    userId: string,
+    email: string,
+    name: string,
+    passwordHash: string,
+    passwordSalt: string,
+}
+export interface userMessage{
+    
+    msgId: string,
+    userId:string,
+    receiverId: string,
+    msgBody: string,
+    timeStamp: string,
+  
+}
+export interface sendMessage{
+    receiverId:string,
+    content:string,
 }
