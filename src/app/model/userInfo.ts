@@ -28,6 +28,9 @@ export interface userMessage{
   
 }
 export interface sendMessage{
-    receiverId:string,
-    content:string,
+    ReceiverId:string,
+    Content:string,
+}
+export interface editMessage{
+    content:string;
 }

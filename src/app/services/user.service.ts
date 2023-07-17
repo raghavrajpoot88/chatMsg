@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { userMessage, loginInfo, userInfo } from '../model/userInfo';
+import { userMessage, loginInfo, userInfo, sendMessage } from '../model/userInfo';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -25,9 +25,22 @@ export class UserService {
     return this.http.get<any>(`https://localhost:7174/api/MessageInfo?UserId=${data}&count=20&sort=asc`,{headers})
     // https://localhost:7174/api/MessageInfo?UserId=${data.UserId}&before=${data.before}&count=${data.count}&sort=${data.sort}
   }
-  sendMessage(data:string,receiverId:string){
+  
+  sendMessage(data:sendMessage):Observable<any>{
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
-    return this.http.post<string>("https://localhost:7174/api/MessageInfo",{receiverId,data},{headers})
+    return this.http.post<any>("https://localhost:7174/api/MessageInfo",data,{headers})
+  }
+
+  editMessage(id:string,msgbody:string):Observable<any>{
+    let headers=new HttpHeaders()
+    .set("Authorization",`bearer ${localStorage.getItem('token')}`)
+    return this.http.put<any>(`https://localhost:7174/api/MessageInfo/${id}`,msgbody,{headers})
+  }
+
+  deleteMessage(id:string){
+    let headers=new HttpHeaders()
+    .set("Authorization",`bearer ${localStorage.getItem('token')}`)
+    return this.http.delete<any>(`https://localhost:7174/api/MessageInfo/${id}`,{headers})
   }
 }

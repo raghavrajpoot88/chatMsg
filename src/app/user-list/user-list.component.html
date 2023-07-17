@@ -52,25 +52,44 @@
         <div class="d-flex text-align align-items-center justify-content-center">
             <h1>Welcome to Chatter<span style="color: #A2A378; ">box</span> </h1>
         </div>
+        <div class="receiverTitle fw-bold">{{nameOfReceiver}}</div>
         <div class="d-lg-flex  flex-column offcanvas-body px-3">
             <div class="flex-grow-1 px-2 overflow-auto">
                 <ng-container *ngFor="let msg of msgList" >
-                    <div class="card mb-2">
+                    <div class="card mb-2" (contextmenu)="onRightClick($event, msg)">
                         <!-- (click)="getMessage(user.userId)" -->
                         <div class="card-body d-flex">
                             <!--? Usericon -->
                             <div class="fw-bold text-start px-2">
                                 <span>{{msg.msgBody}}</span>
+                                <div *ngIf="!isUserMessage" class="messagefound"><p>No Message Found</p></div>
                             </div>
                         </div>
                     </div>
                 </ng-container>
             </div>
         </div>
-        <form [formGroup]="messageform" (ngSubmit)="onSubmitMessage(messageform.value,msgList)">
+        <div style="visibility: hidden; position: fixed;"
+            [style.left.px]="menuTopLeftPosition.x"
+            [style.top.px]="menuTopLeftPosition.y"
+            [matMenuTriggerFor]="rightMenu">
+        </div>
+        <mat-menu #rightMenu="matMenu" click-stop-propagation>
+            <ng-template matMenuContent let-item="item">
+              <button mat-menu-item >Edit Message</button>
+              <div>
+                <form [formGroup]="editform" (click)="handleFormClick($event)" (ngSubmit)="EditMessage()" class="d-flex">
+                    <input type="text" placeholder="Enter new message" formControlName="content">
+                    <button class="btn btn-success">Edit</button>
+                </form>
+              </div>
+              <button (click)="DeleteMessage()" mat-menu-item >Delete Message</button>
+            </ng-template>
+        </mat-menu>
+        <form [formGroup]="messageform" (ngSubmit)="onSubmitMessage()">
             <div class="d-flex ">
                 <div class="group">
-                    <input formControlName="Message" placeholder="Enter your Message"  class="input">
+                    <input formControlName="MsgBody" placeholder="Enter your Message"  class="input" type="text">
                 </div>
                 <button class="btn btn-success justify-content-end">Send</button>
             </div>
