@@ -4,6 +4,7 @@ import { loginInfo} from 'src/app/model/userInfo';
 import { UserListComponent } from 'src/app/user-list/user-list.component';
 import { UserService } from 'src/app/services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,8 +14,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class LoginComponent implements OnInit {
   loginform!:FormGroup
   loginList:loginInfo[]=[];
+  isregistered:boolean=true;
+  errorMessage:string="";
   // userListComponent:new UserListComponent;
-constructor(private service:UserService){}
+constructor(private service:UserService, private router :Router){}
   ngOnInit(): void {
     
    this.loginform=new FormGroup({
@@ -28,26 +31,31 @@ constructor(private service:UserService){}
       console.log(x)
       this.loginList=[x]
       console.log(this.loginList);
+      if(this.loginform.valid){
+        this.router.navigate(["/chat"])
+      }
       // console.log(this.loginform.get('Email')?.value);
       
       localStorage.setItem('token',x.token);
       
     },
-            // (error: HttpErrorResponse) => {
-            //   // Handle error response here
-            //   if (error.status === 400) {
-            //     // Display an error message to the user
-            //reister=false
-            //     console.log('User does not exist.');
-            //   } else {
-            //     // Handle other error scenarios
-            //     console.log('An error occurred:', error.error);
-            //   }
-            // }
-          )
-          
-          
-          
-        }
+    ( e: any) => {
+      // Handle error response here
+      if (e.status === 400 ) {
+        // Display an error message to the user
+      this.isregistered=false
+        this.errorMessage=e.error;
+        console.log(this.errorMessage);
+        console.log(e.error);
+      } else {
+        // Handle other error scenarios
+        console.log('An error occurred:', e);
+      }
+    }
+    )
+    
+    
+    
+  }
 
 }

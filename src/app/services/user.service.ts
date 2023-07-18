@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { userMessage, loginInfo, userInfo, sendMessage } from '../model/userInfo';
+import { userMessage, loginInfo, userInfo, sendMessage, editMessage } from '../model/userInfo';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -32,7 +32,7 @@ export class UserService {
     return this.http.post<any>("https://localhost:7174/api/MessageInfo",data,{headers})
   }
 
-  editMessage(id:string,msgbody:string):Observable<any>{
+  editMessage(id:string,msgbody:editMessage):Observable<any>{
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
     return this.http.put<any>(`https://localhost:7174/api/MessageInfo/${id}`,msgbody,{headers})

@@ -3,6 +3,7 @@
         <form  [formGroup]="registerform" (ngSubmit)="onSubmit(registerform.value)"  class="signup" >
             <!--(ngSubmit)="onSubmit(registerform.value)" -->
             <div class="">
+                <!-- <span>Please</span> -->
                 <div>
                     <h3 class="heading">Registration</h3>
                     <p class="subtext">Welcome to Chating world</p>
@@ -31,7 +32,7 @@
                         <span style="color: lightgreen;"*ngIf="registerform.get('Password')?.valid && registerform.get('Password')?.touched"></span>
                     </div>
                 </div>
-                <button>Submit</button>
+                <button *ngIf="registerform.valid">Submit</button>
                 <p class="toNavigate">  <span class="">Already have account?</span><a routerLink="../login" style="text-decoration: none;"> Log in</a></p>
 
             </div>

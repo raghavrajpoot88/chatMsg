@@ -3,10 +3,12 @@
         <form  [formGroup]="loginform" (ngSubmit)="onSubmitLogin(loginform.value)"  class="signup" >
             <!--(ngSubmit)="onSubmit(registerform.value)" -->
             <div class="">
+                
                 <div>
                     <h3 class="heading">Login</h3>
                     <p class="subtext">Welcome to Chating world</p>
                 </div>
+                <span style="color: red;" *ngIf="!(isregistered)">{{errorMessage}}</span>
                 <div>
                     <label for="email" >Email</label>
                     <input type="email" formControlName="Email" placeholder="Enter Email Id">

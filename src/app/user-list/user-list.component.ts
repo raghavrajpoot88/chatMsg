@@ -14,11 +14,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class UserListComponent implements OnInit {
   list:userList[]=[];
   msgList:userMessage[]=[];
+  sentmessage:userMessage|null=null
+  data:sendMessage = { ReceiverId: '', Content: '' };
+
   editDeleteMessage:string="";
   isUserMessage:Boolean=true;
   nameOfReceiver:string='';
-  data:sendMessage = { ReceiverId: '', Content: '' };
-  editMessageValue:editMessage={content :""};
   
   messageform!:FormGroup
   editform!:FormGroup
@@ -35,14 +36,15 @@ export class UserListComponent implements OnInit {
     
 
   }
-  onSubmitMessage(){
+  sendMessage(){
       // this.data.ReceiverId = msgList[0].receiverId; // Accessing receiverId of the first element
       this.data.Content=this.messageform.get('MsgBody')?.value;
       console.log(this.data);
       
-      this.service.sendMessage(this.data).subscribe(result=>
-      console.log(result)
-      )
+      this.service.sendMessage(this.data).subscribe(result=>{
+        console.log(result)
+        this.sentmessage=result;
+      })
   }
   getList(){
     this.service.userList().subscribe(list=>{
@@ -62,6 +64,7 @@ export class UserListComponent implements OnInit {
       console.log(result);
       this.nameOfReceiver=data.name;
       console.log(data.name);
+      this.sentmessage=null;
     })
     // if(this.msgList.length===0){
     //   this.isUserMessage=false;
@@ -90,14 +93,20 @@ export class UserListComponent implements OnInit {
     this.matMenuTrigger.openMenu();
 
   }
-  EditMessage(){
+  EditMessage(msgId:string,content:string){
     // this.editMessageValue=this.editform.get('EditMsgBody')?.value;
     // console.log(this.editform.get('content')?.value);
-    this.editMessageValue.content=this.editform.value.content;
-    console.log(this.editMessageValue);
+    const editMessageValue: editMessage = { content: content };
     
-    this.service.editMessage(this.editDeleteMessage, this.editMessageValue).subscribe(result=>
+    this.service.editMessage(msgId, editMessageValue).subscribe(result=>{
       console.log(result)
+      const editedMsgIndex = this.msgList.findIndex(msg => msg.msgId === msgId);
+      if (editedMsgIndex !== -1) {
+      this.msgList[editedMsgIndex].msgBody = result.content;
+      this.msgList = [...this.msgList];
+    }
+    
+    }
       )
   } 
   DeleteMessage(){

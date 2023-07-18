@@ -126,6 +126,15 @@ h5{
   background-color: #83764F;
   width: 100%;
   padding: 10px;
+}
+.receiver-message {
+  background-color: #fff;
+  text-align: left;
+}
+
+.sender-message {
+  background-color: #A2A378;
+  text-align: right;
 }  
    
    
