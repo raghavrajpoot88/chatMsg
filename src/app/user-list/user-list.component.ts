@@ -109,9 +109,12 @@ export class UserListComponent implements OnInit {
     }
       )
   } 
-  DeleteMessage(){
-    this.service.deleteMessage(this.editDeleteMessage).subscribe(result=>
-     console.log(result)
+  DeleteMessage(msgId:string){
+    this.service.deleteMessage(this.editDeleteMessage).subscribe(result=>{
+      console.log(result)
+      this.msgList = this.msgList.filter(msg => msg.msgId !== msgId);
+
+    }
      )
   }
   handleFormClick(event: MouseEvent): void {

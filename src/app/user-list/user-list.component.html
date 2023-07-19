@@ -68,9 +68,9 @@
                         </div>
                     </div>
                 </ng-container>
-                <div class="card mb-2" *ngIf="sentmessage && sentmessage.receiverId === data.ReceiverId">
-                    <div class="card-body d-flex">
-                        <div class="fw-bold text-start px-2">
+                <div class="card mb-2 newMessage" *ngIf="sentmessage && sentmessage.receiverId === data.ReceiverId" >
+                    <div class="card-body">
+                        <div class="fw-bold  px-2">
                             <span>{{sentmessage.msgBody}}</span>
                         </div>
                     </div>
@@ -92,15 +92,15 @@
                     <button class="btn btn-success" mat-menu-item (click)="EditMessage(item.msgId, editform.value.content)">Edit</button>
                 </form>
               </div>
-              <button (click)="DeleteMessage()" mat-menu-item >Delete Message</button>
+              <button (click)="DeleteMessage(item.msgId)" mat-menu-item >Delete Message</button>
             </ng-template>
         </mat-menu>
-        <form [formGroup]="messageform" (ngSubmit)="sendMessage()">
-            <div class="d-flex ">
-                <div class="group">
-                    <input formControlName="MsgBody" placeholder="Enter your Message"  class="input" type="text">
+        <form [formGroup]="messageform" (ngSubmit)="sendMessage()" class="w-100">
+            <div class="d-flex w-100 p-1 gap-3 ">
+                <div class="group w-100">
+                    <input formControlName="MsgBody" placeholder="Enter your Message"  class="input w-100" type="text">
                 </div>
-                <button class="btn btn-success justify-content-end">Send</button>
+                <button class="btn btn-success justify-content-end px-5">Send</button>
             </div>
         </form>
     </div>
