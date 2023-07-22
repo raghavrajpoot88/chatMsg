@@ -10,13 +10,13 @@ export class UserService {
 
   constructor(private http:HttpClient) { }
   userRegistration(data: userInfo):Observable<userInfo>{
-    return this.http.post<userInfo>("https://localhost:7174/api/Registration/register",data);
+    return this.http.post<userInfo>("https://localhost:7174/api/User/register",data);
   }
   userLogin(data:loginInfo):Observable<loginInfo>{
-    return this.http.post<loginInfo>("https://localhost:7174/api/Registration/login",data);
+    return this.http.post<loginInfo>("https://localhost:7174/api/User/login",data);
   }
   userList():Observable<any>{
-    return this.http.get<any>("https://localhost:7174/api/Registration")
+    return this.http.get<any>("https://localhost:7174/api/User")
   }
   userMessage(data:string):Observable<any>{
     // data:UserMessage

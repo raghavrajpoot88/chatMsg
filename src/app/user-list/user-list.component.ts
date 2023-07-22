@@ -15,7 +15,7 @@ export class UserListComponent implements OnInit {
   list:userList[]=[];
   msgList:userMessage[]=[];
   sentmessage:userMessage|null=null
-  data:sendMessage = { ReceiverId: '', Content: '' };
+  data:sendMessage = { ReceiverId: "", MsgBody: "" };
 
   editDeleteMessage:string="";
   isUserMessage:Boolean=true;
@@ -38,7 +38,7 @@ export class UserListComponent implements OnInit {
   }
   sendMessage(){
       // this.data.ReceiverId = msgList[0].receiverId; // Accessing receiverId of the first element
-      this.data.Content=this.messageform.get('MsgBody')?.value;
+      this.data.MsgBody=this.messageform.get('MsgBody')?.value;
       console.log(this.data);
       
       this.service.sendMessage(this.data).subscribe(result=>{
@@ -97,6 +97,8 @@ export class UserListComponent implements OnInit {
     // this.editMessageValue=this.editform.get('EditMsgBody')?.value;
     // console.log(this.editform.get('content')?.value);
     const editMessageValue: editMessage = { content: content };
+    console.log(editMessageValue);
+    
     
     this.service.editMessage(msgId, editMessageValue).subscribe(result=>{
       console.log(result)

@@ -29,7 +29,7 @@ export interface userMessage{
 }
 export interface sendMessage{
     ReceiverId:string,
-    Content:string,
+    MsgBody:string,
 }
 export interface editMessage{
     content:string;
