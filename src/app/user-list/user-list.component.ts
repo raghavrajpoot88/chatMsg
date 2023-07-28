@@ -5,6 +5,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 
 import { userMessage, userList,sendMessage, editMessage } from '../model/userInfo';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 
 @Component({
   selector: 'app-user-list',
@@ -14,7 +15,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class UserListComponent implements OnInit {
   list:userList[]=[];
   msgList:userMessage[]=[];
-  sentmessage:userMessage|null=null
+  sentmessage:userMessage|null=null;
+  connectionData:userMessage[]=[];
   data:sendMessage = { ReceiverId: "", MsgBody: "" };
 
   editDeleteMessage:string="";
@@ -23,6 +25,9 @@ export class UserListComponent implements OnInit {
   
   messageform!:FormGroup
   editform!:FormGroup
+
+  private _hubConnection!: HubConnection
+  public connectionId!: string;
   constructor(private service:UserService ){}
   ngOnInit(): void {
     this.getList();
@@ -33,18 +38,55 @@ export class UserListComponent implements OnInit {
       content:new FormControl(null,Validators.required)    
     })
     console.log(this.editform.value);
+
+    //?Real-time implementation
+    this._hubConnection=new HubConnectionBuilder().withUrl('https://localhost:7174/hub').build();
+    this._hubConnection.start()
+    .then(()=>
+      console.log("Realtime connection started"))
+    // .then(()=>this.getConnectionId())
+    .catch(error=>{
+      console.log("Erroring occuring at connection establishment")
+    });
+
+    this._hubConnection.on('ReceiveMessage',(data:userMessage)=>{
+      this.msgList.push(data);
+      console.log(data);
+      console.log(this.msgList);
+    })
+    //   private getConnectionId = () => {
+    //   this._hubConnection.invoke('getconnectionid')
+    //   .then((data) => {
+    //     console.log(data);
+    //     this.connectionId = data;
+    //   });
+    // }
     
 
   }
+  // getConnectionId = () => {
+  //     this._hubConnection.invoke('GetConnectionId')
+  //     .then((data) => {
+  //       console.log(data);
+  //       this.connectionId = data;
+  //     });
+  //   }
+
   sendMessage(){
       // this.data.ReceiverId = msgList[0].receiverId; // Accessing receiverId of the first element
       this.data.MsgBody=this.messageform.get('MsgBody')?.value;
       console.log(this.data);
-      
-      this.service.sendMessage(this.data).subscribe(result=>{
-        console.log(result)
-        this.sentmessage=result;
+      // this._hubConnection.invoke('NewMessage', this.data.ReceiverId, message);
+      this.service.sendMessage(this.data).subscribe((result:userMessage)=>{
+        console.log(result);
+        
+        //this.msgList.push(result);
+        console.log(this.msgList); 
+        
+        //! this._hubConnection.invoke('ReceiveMessage',this.connectionId, result);
+        this._hubConnection.invoke('NewMessage', result);
       })
+
   }
   getList(){
     this.service.userList().subscribe(list=>{
@@ -57,13 +99,13 @@ export class UserListComponent implements OnInit {
   }
   getMessage(data:userList){
     // this.data.ReceiverId=data.userId;
-    this.service.userMessage(data.userId).subscribe(result=>{
+    this.service.userMessage(data.id).subscribe(result=>{
       this.msgList=result;
-      this.data.ReceiverId=data.userId
+      this.data.ReceiverId=data.id
       
       console.log(result);
-      this.nameOfReceiver=data.name;
-      console.log(data.name);
+      this.nameOfReceiver=data.userName;
+      console.log(data.userName);
       this.sentmessage=null;
     })
     // if(this.msgList.length===0){
@@ -98,14 +140,14 @@ export class UserListComponent implements OnInit {
     // console.log(this.editform.get('content')?.value);
     const editMessageValue: editMessage = { content: content };
     console.log(editMessageValue);
-    
-    
     this.service.editMessage(msgId, editMessageValue).subscribe(result=>{
       console.log(result)
       const editedMsgIndex = this.msgList.findIndex(msg => msg.msgId === msgId);
       if (editedMsgIndex !== -1) {
-      this.msgList[editedMsgIndex].msgBody = result.content;
+      this.msgList[editedMsgIndex].msgBody = editMessageValue.content;
       this.msgList = [...this.msgList];
+      console.log(editMessageValue.content);
+      
     }
     
     }

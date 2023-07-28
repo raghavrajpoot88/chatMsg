@@ -12,16 +12,16 @@ export interface loginInfo{
     token:any,
 }
 export interface userList{
-    userId: string,
+    id: string,
     email: string,
-    name: string,
+    userName: string,
     passwordHash: string,
     passwordSalt: string,
 }
 export interface userMessage{
     
     msgId: string,
-    userId:string,
+    id:string,
     receiverId: string,
     msgBody: string,
     timeStamp: string,

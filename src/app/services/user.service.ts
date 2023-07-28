@@ -29,7 +29,7 @@ export class UserService {
   sendMessage(data:sendMessage):Observable<any>{
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
-    return this.http.post<any>("https://localhost:7174/api/MessageInfo",data,{headers})
+    return this.http.post<any>("https://localhost:7174/api/MessageInfo/send",data,{headers})
   }
 
   editMessage(id:string,msgbody:editMessage):Observable<any>{
