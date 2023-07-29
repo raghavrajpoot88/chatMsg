@@ -6,6 +6,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { userMessage, userList,sendMessage, editMessage } from '../model/userInfo';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import { validateVerticalPosition } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-user-list',
@@ -16,7 +17,7 @@ export class UserListComponent implements OnInit {
   list:userList[]=[];
   msgList:userMessage[]=[];
   sentmessage:userMessage|null=null;
-  connectionData:userMessage[]=[];
+  searchData:userMessage[]=[];
   data:sendMessage = { ReceiverId: "", MsgBody: "" };
 
   editDeleteMessage:string="";
@@ -25,6 +26,7 @@ export class UserListComponent implements OnInit {
   
   messageform!:FormGroup
   editform!:FormGroup
+  searchform!:FormGroup
 
   private _hubConnection!: HubConnection
   public connectionId!: string;
@@ -38,6 +40,9 @@ export class UserListComponent implements OnInit {
       content:new FormControl(null,Validators.required)    
     })
     console.log(this.editform.value);
+    this.searchform=new FormGroup({
+      query:new FormControl(null ,Validators.required)
+    })
 
     //?Real-time implementation
     this._hubConnection=new HubConnectionBuilder().withUrl('https://localhost:7174/hub').build();
@@ -99,6 +104,7 @@ export class UserListComponent implements OnInit {
   }
   getMessage(data:userList){
     // this.data.ReceiverId=data.userId;
+    this.isUserMessage=true;
     this.service.userMessage(data.id).subscribe(result=>{
       this.msgList=result;
       this.data.ReceiverId=data.id
@@ -157,10 +163,21 @@ export class UserListComponent implements OnInit {
     this.service.deleteMessage(this.editDeleteMessage).subscribe(result=>{
       console.log(result)
       this.msgList = this.msgList.filter(msg => msg.msgId !== msgId);
-
-    }
-     )
+    })
   }
+  searchMessage(query:string){
+    this.isUserMessage=false;
+    this.service.searchMessages(query).subscribe((result:any) =>{
+      console.log(result)
+      this.searchData=result
+      console.log(this.searchData);
+      
+
+      
+    })
+  }
+
+
   handleFormClick(event: MouseEvent): void {
     event.stopPropagation();
   }

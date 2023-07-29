@@ -13,6 +13,7 @@ import { UserListComponent } from './user-list/user-list.component';
 import { ConversationHistoryComponent } from './conversation-history/conversation-history.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LogsComponent } from './logs/logs.component';
+import { CommonModule } from '@angular/common';
 
 
 
@@ -32,7 +33,8 @@ import { LogsComponent } from './logs/logs.component';
     ReactiveFormsModule,
     HttpClientModule,
     MatMenuModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CommonModule 
     
   ],
   providers: [],

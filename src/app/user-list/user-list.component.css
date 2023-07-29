@@ -13,6 +13,7 @@
     --animation-color: #37FF8B;
     --fs-size: 2em;
     letter-spacing: 3px;
+    margin-left: 15px;
     text-decoration: none;
     font-size: var(--fs-size);
     font-family: "Arial";
@@ -53,7 +54,7 @@
     border: lightgray 2px solid;
   }
   .group {
-    display: flex;
+    /* display: flex; */
     line-height: 28px;
     align-items: center;
     position: relative;
@@ -119,7 +120,7 @@ h5{
 .title{
 
 }
-.messagefound{
+.messageNotFound{
   background-color: cornsilk;
 }
 .receiverTitle{
@@ -130,15 +131,21 @@ h5{
 .receiver-message {
   background-color: #fff;
   text-align: left;
+  
 }
 
 .sender-message {
   background-color: #A2A378;
   text-align: right;
+  
+  justify-content:end;
 }  
 .newMessage{
   background-color: #A2A378 ;
   text-align: right;
+}
+.cententdiv{
+  background-color: #E5F9DB;
 }
    
    

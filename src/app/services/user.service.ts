@@ -43,4 +43,10 @@ export class UserService {
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
     return this.http.delete<any>(`https://localhost:7174/api/MessageInfo/${id}`,{headers})
   }
+
+  searchMessages(query:string):Observable<any>{
+    let headers=new HttpHeaders()
+    .set("Authorization",`bearer ${localStorage.getItem('token')}`)
+    return this.http.get<userMessage>(`https://localhost:7174/api/MessageInfo/search?query=${query}`,{headers})
+  }
 }
