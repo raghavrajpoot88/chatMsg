@@ -34,3 +34,11 @@ export interface sendMessage{
 export interface editMessage{
     content:string;
 }
+export interface logs{
+    logId :string,
+    clientIp :string,
+    traceId :string,
+    requestBody :string,
+    requestrequestDateTimeUtc :string,
+    username :string,
+}

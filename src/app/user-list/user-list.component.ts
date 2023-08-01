@@ -3,7 +3,7 @@ import { UserService } from '../services/user.service';
 import { Observable } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
 
-import { userMessage, userList,sendMessage, editMessage } from '../model/userInfo';
+import { userMessage, userList,sendMessage, editMessage, logs } from '../model/userInfo';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import { validateVerticalPosition } from '@angular/cdk/overlay';
@@ -18,6 +18,7 @@ export class UserListComponent implements OnInit {
   msgList:userMessage[]=[];
   sentmessage:userMessage|null=null;
   searchData:userMessage[]=[];
+  logs:logs[]=[];
   data:sendMessage = { ReceiverId: "", MsgBody: "" };
 
   editDeleteMessage:string="";
@@ -173,6 +174,14 @@ export class UserListComponent implements OnInit {
       console.log(this.searchData);
       
 
+      
+    })
+  }
+  reuqestLogs(){
+    this.service.requestLogs().subscribe(result =>{
+      console.log(result);
+      this.logs=result;
+      console.log(this.logs);
       
     })
   }
