@@ -11,6 +11,9 @@ export interface loginInfo{
     Password:string,
     token:any,
 }
+export interface GoogleUserRequest {
+    idToken: string;
+}
 export interface userList{
     id: string,
     email: string,
@@ -41,4 +44,7 @@ export interface logs{
     requestBody :string,
     requestrequestDateTimeUtc :string,
     username :string,
+}
+export interface tokens{
+    token:string
 }

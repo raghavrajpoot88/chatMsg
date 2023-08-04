@@ -10,12 +10,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatMenuModule } from '@angular/material/menu';
 import { LoginComponent } from './login/login/login.component';
 import { UserListComponent } from './user-list/user-list.component';
-import { ConversationHistoryComponent } from './conversation-history/conversation-history.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LogsComponent } from './logs/logs.component';
 import { CommonModule } from '@angular/common';
-
-
+import { GoogleLoginProvider, SocialAuthServiceConfig} from '@abacritt/angularx-social-login';
+import { SocialLoginModule} from '@abacritt/angularx-social-login';
+import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,6 @@ import { CommonModule } from '@angular/common';
     RegisterComponent,
     LoginComponent,
     UserListComponent,
-    ConversationHistoryComponent,
     MainPageComponent,
     LogsComponent
   ],
@@ -34,10 +33,27 @@ import { CommonModule } from '@angular/common';
     HttpClientModule,
     MatMenuModule,
     BrowserAnimationsModule,
-    CommonModule 
+    CommonModule,
+    SocialLoginModule,
+    GoogleSigninButtonModule
     
   ],
-  providers: [],
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '455670740633-4tletg44i13sn34v0tegikver5u8elfd.apps.googleusercontent.com'
+            )
+          }
+        ],
+      } as SocialAuthServiceConfig,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { userMessage, loginInfo, userInfo, sendMessage, editMessage } from '../model/userInfo';
+import { userMessage, loginInfo, userInfo, sendMessage, editMessage, GoogleUserRequest } from '../model/userInfo';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -12,9 +12,15 @@ export class UserService {
   userRegistration(data: userInfo):Observable<userInfo>{
     return this.http.post<userInfo>("https://localhost:7174/api/User/register",data);
   }
-  userLogin(data:loginInfo):Observable<loginInfo>{
-    return this.http.post<loginInfo>("https://localhost:7174/api/User/login",data);
+  userLogin(data:loginInfo):Observable<any>{
+    return this.http.post<any>("https://localhost:7174/api/User/login",data);
   }
+  googleLogin(googleUser: string):Observable<any>{
+    let headers=new HttpHeaders()
+    .set("Authorization",`bearer ${localStorage.getItem('token')}`)
+    return this.http.post<any>("https://localhost:7174/api/User/google",{idToken:googleUser},{headers})
+  }
+  
   userList():Observable<any>{
     return this.http.get<any>("https://localhost:7174/api/User")
   }

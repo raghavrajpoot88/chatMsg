@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { Observable } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
 
-import { userMessage, userList,sendMessage, editMessage, logs } from '../model/userInfo';
+import { userMessage, userList,sendMessage, editMessage, logs, loginInfo, tokens } from '../model/userInfo';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import { validateVerticalPosition } from '@angular/cdk/overlay';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-list',
@@ -14,6 +15,7 @@ import { validateVerticalPosition } from '@angular/cdk/overlay';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
+  @Input() token!:string;
   list:userList[]=[];
   msgList:userMessage[]=[];
   sentmessage:userMessage|null=null;
@@ -24,6 +26,7 @@ export class UserListComponent implements OnInit {
   editDeleteMessage:string="";
   isUserMessage:Boolean=true;
   nameOfReceiver:string='';
+  tt !:string ;
   
   messageform!:FormGroup
   editform!:FormGroup
@@ -44,9 +47,12 @@ export class UserListComponent implements OnInit {
     this.searchform=new FormGroup({
       query:new FormControl(null ,Validators.required)
     })
-
+    this.tt = localStorage.getItem('token')!;
     //?Real-time implementation
-    this._hubConnection=new HubConnectionBuilder().withUrl('https://localhost:7174/hub').build();
+    let headers=new HttpHeaders()
+    .set("Authorization",`bearer ${localStorage.getItem('token')}`)
+    this._hubConnection=new HubConnectionBuilder().withUrl('https://localhost:7174/hub',{ accessTokenFactory: () => this.tt }).build();
+    // ,{ accessTokenFactory: () => this.token }
     this._hubConnection.start()
     .then(()=>
       console.log("Realtime connection started"))
@@ -86,7 +92,7 @@ export class UserListComponent implements OnInit {
       this.service.sendMessage(this.data).subscribe((result:userMessage)=>{
         console.log(result);
         
-        //this.msgList.push(result);
+        this.msgList.push(result);
         console.log(this.msgList); 
         
         //! this._hubConnection.invoke('ReceiveMessage',this.connectionId, result);
