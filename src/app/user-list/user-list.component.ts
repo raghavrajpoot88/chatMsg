@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { Observable } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -8,6 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import { validateVerticalPosition } from '@angular/cdk/overlay';
 import { HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -15,12 +16,12 @@ import { HttpHeaders } from '@angular/common/http';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  @Input() token!:string;
+  @ViewChild('bottomOfPage', { static: true }) bottomOfPageRef!: ElementRef;
+  
   list:userList[]=[];
   msgList:userMessage[]=[];
   sentmessage:userMessage|null=null;
   searchData:userMessage[]=[];
-  logs:logs[]=[];
   data:sendMessage = { ReceiverId: "", MsgBody: "" };
 
   editDeleteMessage:string="";
@@ -34,7 +35,7 @@ export class UserListComponent implements OnInit {
 
   private _hubConnection!: HubConnection
   public connectionId!: string;
-  constructor(private service:UserService ){}
+  constructor(private service:UserService , private router:Router){}
   ngOnInit(): void {
     this.getList();
     this.messageform=new FormGroup({
@@ -93,12 +94,23 @@ export class UserListComponent implements OnInit {
         console.log(result);
         
         this.msgList.push(result);
+        if (this.msgList.length > 20) {
+          this.msgList.splice(0, this.msgList.length - 20);
+        }
         console.log(this.msgList); 
         
         //! this._hubConnection.invoke('ReceiveMessage',this.connectionId, result);
         this._hubConnection.invoke('NewMessage', result);
-      })
 
+        this.messageform.reset();
+        this.scrollToBottom();
+      })
+  }
+  private scrollToBottom() {
+    if (this.bottomOfPageRef && this.bottomOfPageRef.nativeElement) {
+      this.bottomOfPageRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }
+    console.log("Scrolling to the bottom");
   }
   getList(){
     this.service.userList().subscribe(list=>{
@@ -173,8 +185,8 @@ export class UserListComponent implements OnInit {
     })
   }
   searchMessage(query:string){
-    this.isUserMessage=false;
-    this.service.searchMessages(query).subscribe((result:any) =>{
+      this.isUserMessage = false;
+      this.service.searchMessages(query).subscribe((result:any) =>{
       console.log(result)
       this.searchData=result
       console.log(this.searchData);
@@ -183,14 +195,16 @@ export class UserListComponent implements OnInit {
       
     })
   }
-  reuqestLogs(){
-    this.service.requestLogs().subscribe(result =>{
-      console.log(result);
-      this.logs=result;
-      console.log(this.logs);
-      
-    })
+  shiftToSearch(){
+    // if (this.searchform.dirty && this.searchform.touched && this.searchform.invalid) {
+      this.isUserMessage = true;
+    // }
+
   }
+  NavigateToLog(){
+    this.router.navigate(['/log']);
+  }
+  
 
 
   handleFormClick(event: MouseEvent): void {

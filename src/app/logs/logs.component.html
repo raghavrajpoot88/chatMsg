@@ -1,1 +1,34 @@
-<p>logs works!</p>
+<div class="timeselector">
+    <select class="btn custom" [(ngModel)]="selectedTimeInterval" (change)="requestLogs()">
+        <option value="5min">Last 5 Minutes</option>
+        <option value="10min">Last 10 Minutes</option>
+        <option value="30min">Last 30 Minutes</option>
+        <!-- Add other custom time intervals as needed -->
+    </select>
+</div>
+  
+  <!-- Display logs in a table -->
+<div class="table-container">
+    <table class="log-table">
+        <thead>
+            <tr>
+                <th>Log Username</th>
+                <th>Log Ip</th>
+                <th>Log traceId</th>
+                <th>Log requestBody</th>
+                <th>Log Time</th>
+                <!-- Add more columns if needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let log of logs">
+                <td>{{ log.username }}</td>
+                <td>{{ log.clientIp }}</td>
+                <td>{{ log.traceId }}</td>
+                <td>{{ log.requestBody }}</td>
+                <td>{{ log.requestDateTimeUtc }}</td>
+                <!-- Add more columns if needed -->
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -42,7 +42,7 @@ export interface logs{
     clientIp :string,
     traceId :string,
     requestBody :string,
-    requestrequestDateTimeUtc :string,
+    requestDateTimeUtc :string,
     username :string,
 }
 export interface tokens{

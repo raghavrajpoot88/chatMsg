@@ -1,0 +1,44 @@
+.timeselector {
+    display: flex;
+    justify-content: end;
+    padding: 10px;
+    
+  }
+  .custom option{
+    padding: 5px;
+  }
+  .custom { 
+    border: 2px solid #000;
+  }
+  .log-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+  }
+  
+  .log-table th,
+  .log-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+  }
+  thead{
+    top: 0;
+    position: sticky;
+  }
+  
+  .log-table thead {
+    background-color: #83764F;
+    color: #fff; /* Add text color for the table header */
+  }
+  
+  .log-table tbody tr:nth-child(even) {
+    background-color: #E5F9DB;
+    color: #000; /* Add text color for even rows */
+  }
+  
+  .log-table tbody tr:hover {
+    background-color: #A0D8B3;
+    cursor: pointer; /* Change cursor on hover */
+    color: #A2A378; /* Add text color for hovered rows */
+  }

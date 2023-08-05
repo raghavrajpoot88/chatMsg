@@ -117,9 +117,7 @@
 h5{
     margin-bottom: 0;
 }
-.title{
 
-}
 .messageNotFound{
   background-color: cornsilk;
 }
@@ -146,6 +144,9 @@ h5{
 }
 .cententdiv{
   background-color: #E5F9DB;
+}
+.userName{
+  cursor: pointer;
 }
    
    
