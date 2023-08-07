@@ -1,10 +1,24 @@
 <div class="timeselector">
-    <select class="btn custom" [(ngModel)]="selectedTimeInterval" (change)="requestLogs()">
+    <!-- <label for="customRange2" class="form-label">Example range</label>
+    <input type="range" class="form-range" min="0" max="5" id="customRange2" [(ngModel)]="customTimeInterval" (input)="onCustomTimeIntervalChange()"> -->
+    <!-- <select class="btn custom" [(ngModel)]="selectedTimeInterval" (change)="requestLogs()">
         <option value="5min">Last 5 Minutes</option>
         <option value="10min">Last 10 Minutes</option>
         <option value="30min">Last 30 Minutes</option>
+        <option value="custom">Custom Range</option>
         <!-- Add other custom time intervals as needed -->
-    </select>
+    <!-- </select> --> 
+    <div class="selector">
+        <!-- <label for="customRange2" class="form-label">Custom Range: {{ selectedTimeInterval }} minutes</label> -->
+        <div class="PB-range-slider-div">
+            <input type="range" class="form-range slider" min="5" max="60" step="5" id="customRange2"  [(ngModel)]="selectedTimeInterval">
+            <p class="PB-range-slidervalue">{{ selectedTimeInterval }} minutes</p>
+        </div>
+
+    </div>
+    <button class="btn custom" (click)="requestLogs()">Request Logs</button>
+
+
 </div>
   
   <!-- Display logs in a table -->

@@ -34,11 +34,26 @@
                     <i class="fa fa-times text-white"></i>
                 </button>
             </div>
-            <div class="d-lg-flex vh-100 flex-column offcanvas-body px-3">
+            <div class="d-lg-flex vh-100 flex-column offcanvas-body px-3" >
                 <div class=" my-2 title">
                     <h5>Chats</h5>
                 </div>
-                <div class="flex-grow-1 px-2 overflow-auto">
+                <div class="overflow-auto w-100" *ngIf="!isUserMessage">
+                    <ng-container *ngFor="let msg of searchData" >
+                        <div class="card mb-2 " [ngClass]="{'receiver-message': msg.receiverId !== data.ReceiverId, 'sender-message': msg.receiverId === data.ReceiverId}">
+                        <!-- (click)="getMessage(user.userId)" -->
+                            <div class="card-body ">
+                                <!--? Usericon -->
+                                <div class="fw-bold px-2">
+                                    <span>{{msg.msgBody}}</span>
+                                    <!-- <span>{{}}</span> -->
+                                    <div *ngIf="searchData.length===0" class="messageNotFound"><p>No Message Found</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="flex-grow-1 px-2 overflow-auto" *ngIf="isUserMessage">
                     <ng-container *ngFor="let user of list" >
                         <div class="card mb-2 userName" (click)="getMessage(user)">
                             <!-- (click)="getMessage(user.userId)" -->
@@ -64,22 +79,8 @@
             <div class="d-flex text-align align-items-center justify-content-center">
                 <h1>Welcome to Chatter<span style="color: #A2A378; ">box</span> </h1>
             </div>
-            <div class="overflow-auto w-100" *ngIf="!isUserMessage">
-                <ng-container *ngFor="let msg of searchData" >
-                    <div class="card mb-2 " [ngClass]="{'receiver-message': msg.receiverId !== data.ReceiverId, 'sender-message': msg.receiverId === data.ReceiverId}">
-                    <!-- (click)="getMessage(user.userId)" -->
-                        <div class="card-body ">
-                            <!--? Usericon -->
-                            <div class="fw-bold px-2">
-                                <span>{{msg.msgBody}}</span>
-                                <!-- <span>{{}}</span> -->
-                                <div *ngIf="searchData.length===0" class="messageNotFound"><p>No Message Found</p></div>
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>
-            </div>
-            <div class="d-lg-flex w-100  flex-column offcanvas-body px-3 cententdiv" *ngIf="isUserMessage">
+            
+            <div class="d-lg-flex w-100  flex-column offcanvas-body px-3 cententdiv"  id="bottomofpage">
                 <div class="receiverTitle fw-bold">{{nameOfReceiver}}</div>
                 <div class="flex-grow-1 px-2 overflow-auto" >
                     <ng-container *ngFor="let msg of msgList" >
@@ -94,7 +95,7 @@
                             </div>
                         </div>
                     </ng-container>
-                    <div id="bottomofpage"></div>
+                    <!-- <div id="bottomofpage"></div> -->
                 </div>
             </div>
             <div style="visibility: hidden; position: fixed;"

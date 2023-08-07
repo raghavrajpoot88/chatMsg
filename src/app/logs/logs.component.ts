@@ -8,7 +8,8 @@ import { logs } from '../model/userInfo';
   styleUrls: ['./logs.component.css']
 })
 export class LogsComponent implements OnInit {
-  selectedTimeInterval: string = "5min";
+  selectedTimeInterval: number = 5;
+  
   logs:logs[]=[];
   
   constructor(private service:UserService ){}

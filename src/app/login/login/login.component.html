@@ -27,16 +27,12 @@
                 </div>
                 <button>Submit</button>
                 <p class="toNavigate">  <span class="">Don't have account?</span><a routerLink="../register" style="text-decoration: none;"> Sign-up</a></p>
-
-                
+                <div class="googleLogin">
+                    <asl-google-signin-button   theme="filled_blue" type="standard" shape="pill" size="medium" (click)="SignInWithGoolgle()"></asl-google-signin-button>
+                </div>
             </div>
         </form>
         <!-- <button class="btn btn-social-icon btn-google" (click)="SignInWithGoolgle()">Sign in with Google</button> -->
-        <asl-google-signin-button theme="filled_blue" type="standard"
-          shape="pill"
-          size="medium"
-          (click)="SignInWithGoolgle()"
-        ></asl-google-signin-button>
         <!-- <button (click)="SignInWithGoolgle()">google</button> -->
     </div>
 </div>

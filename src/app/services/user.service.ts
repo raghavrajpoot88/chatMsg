@@ -58,7 +58,7 @@ export class UserService {
     return this.http.get<userMessage>(`https://localhost:7174/api/MessageInfo/search?query=${query}`,{headers})
   }
 
-  requestLogsData(timeInterval: string){
+  requestLogsData(timeInterval: number){
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
     return this.http.get<any>(`https://localhost:7174/api/RequestLog?timeInterval=${timeInterval}`,{headers})
