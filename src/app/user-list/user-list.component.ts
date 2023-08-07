@@ -1,12 +1,11 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../services/user.service';
-import { Observable } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { Location } from '@angular/common';
 
 import { userMessage, userList,sendMessage, editMessage, logs, loginInfo, tokens } from '../model/userInfo';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
-import { validateVerticalPosition } from '@angular/cdk/overlay';
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -28,6 +27,7 @@ export class UserListComponent implements OnInit {
   isUserMessage:Boolean=true;
   nameOfReceiver:string='';
   tt !:string ;
+  errorMessage:string='';
   
   messageform!:FormGroup
   editform!:FormGroup
@@ -35,7 +35,9 @@ export class UserListComponent implements OnInit {
 
   private _hubConnection!: HubConnection
   public connectionId!: string;
-  constructor(private service:UserService , private router:Router){}
+
+  constructor(private service:UserService , private router:Router, private location:Location){}
+
   ngOnInit(): void {
     this.getList();
     this.messageform=new FormGroup({
@@ -48,7 +50,9 @@ export class UserListComponent implements OnInit {
     this.searchform=new FormGroup({
       query:new FormControl(null ,Validators.required)
     })
+
     this.tt = localStorage.getItem('token')!;
+
     //?Real-time implementation
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
@@ -67,23 +71,7 @@ export class UserListComponent implements OnInit {
       console.log(data);
       console.log(this.msgList);
     })
-    //   private getConnectionId = () => {
-    //   this._hubConnection.invoke('getconnectionid')
-    //   .then((data) => {
-    //     console.log(data);
-    //     this.connectionId = data;
-    //   });
-    // }
-    
-
   }
-  // getConnectionId = () => {
-  //     this._hubConnection.invoke('GetConnectionId')
-  //     .then((data) => {
-  //       console.log(data);
-  //       this.connectionId = data;
-  //     });
-  //   }
 
   sendMessage(){
       // this.data.ReceiverId = msgList[0].receiverId; // Accessing receiverId of the first element
@@ -112,17 +100,17 @@ export class UserListComponent implements OnInit {
     }
     console.log("Scrolling to the bottom");
   }
+
   getList(){
     this.service.userList().subscribe(list=>{
       console.log(list);
       this.list=list;
       // console.log(this.list[2].name);
-      
     })
-    
   }
+  
   getMessage(data:userList){
-    // this.data.ReceiverId=data.userId;
+    this.location.replaceState(`/chat/user/${data.id}`);
     this.isUserMessage=true;
     this.service.userMessage(data.id).subscribe(result=>{
       this.msgList=result;
@@ -137,64 +125,66 @@ export class UserListComponent implements OnInit {
     //   this.isUserMessage=false;
     // }
   }
-   // we create an object that contains coordinates
-   menuTopLeftPosition =  {x: 0, y: 0}
 
+   //? we create an object that contains coordinates
+   menuTopLeftPosition =  {x: 0, y: 0}
    // reference to the MatMenuTrigger in the DOM
    @ViewChild(MatMenuTrigger, {static: true}) 
    matMenuTrigger!: MatMenuTrigger;
 
    onRightClick(event: MouseEvent, item: any) {
-    // preventDefault avoids to show the visualization of the right-click menu of the browser
+    //? preventDefault avoids to show the visualization of the right-click menu of the browser
     event.preventDefault();
-    // we record the mouse position in our object
+    //* we record the mouse position in our object
     this.menuTopLeftPosition.x = event.clientX;
     this.menuTopLeftPosition.y = event.clientY;
-    // we open the menu
-    // we pass to the menu the information about our object
+    //* we open the menu
+    //* we pass to the menu the information about our object
     this.matMenuTrigger.menuData = {item: item}
     this.editDeleteMessage=item.msgId;
     console.log(this.editDeleteMessage);
     
-    // we open the menu
+    //* we open the menu
     this.matMenuTrigger.openMenu();
-
   }
+
   EditMessage(msgId:string,content:string){
-    // this.editMessageValue=this.editform.get('EditMsgBody')?.value;
-    // console.log(this.editform.get('content')?.value);
     const editMessageValue: editMessage = { content: content };
     console.log(editMessageValue);
     this.service.editMessage(msgId, editMessageValue).subscribe(result=>{
       console.log(result)
       const editedMsgIndex = this.msgList.findIndex(msg => msg.msgId === msgId);
       if (editedMsgIndex !== -1) {
-      this.msgList[editedMsgIndex].msgBody = editMessageValue.content;
-      this.msgList = [...this.msgList];
-      console.log(editMessageValue.content);
-      
-    }
-    
-    }
-      )
+        this.msgList[editedMsgIndex].msgBody = editMessageValue.content;
+        this.msgList = [...this.msgList];
+        console.log(editMessageValue.content);
+      }
+    })
   } 
+
   DeleteMessage(msgId:string){
     this.service.deleteMessage(this.editDeleteMessage).subscribe(result=>{
       console.log(result)
-      this.msgList = this.msgList.filter(msg => msg.msgId !== msgId);
+      if(!result){
+        this.errorMessage='Some error, Please Try again.'
+      }
+      const indexToRemove = this.msgList.findIndex(item => item.msgId === msgId);
+      console.log(indexToRemove);
+      if (indexToRemove !== -1) {
+        this.msgList.splice(indexToRemove, 1);
+      }
     })
   }
+
   searchMessage(query:string){
       this.isUserMessage = false;
       this.service.searchMessages(query).subscribe((result:any) =>{
       console.log(result)
       this.searchData=result
       console.log(this.searchData);
-      
-
-      
     })
   }
+
   shiftToSearch(){
     // if (this.searchform.dirty && this.searchform.touched && this.searchform.invalid) {
       this.isUserMessage = true;
@@ -204,15 +194,7 @@ export class UserListComponent implements OnInit {
   NavigateToLog(){
     this.router.navigate(['/log']);
   }
-  
-
-
   handleFormClick(event: MouseEvent): void {
     event.stopPropagation();
   }
-  
-
- 
-  
-
 }

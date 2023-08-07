@@ -22,13 +22,15 @@ export class UserService {
   }
   
   userList():Observable<any>{
-    return this.http.get<any>("https://localhost:7174/api/User")
+    let headers=new HttpHeaders()
+    .set("Authorization",`bearer ${localStorage.getItem('token')}`)
+    return this.http.get<any>("https://localhost:7174/api/User",{headers})
   }
   userMessage(data:string):Observable<any>{
     // data:UserMessage
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
-    return this.http.get<any>(`https://localhost:7174/api/MessageInfo?UserId=${data}&count=20&sort=asc`,{headers})
+    return this.http.get<any>(`https://localhost:7174/api/MessageInfo?UserId=${data}&count=${20}&sort=asc`,{headers})
     // https://localhost:7174/api/MessageInfo?UserId=${data.UserId}&before=${data.before}&count=${data.count}&sort=${data.sort}
   }
   

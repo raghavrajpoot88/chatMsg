@@ -22,8 +22,6 @@ export class LogsComponent implements OnInit {
       console.log(result);
       this.logs=result;
       console.log(this.logs);
-      
     })
   }
-  
 }
