@@ -17,12 +17,9 @@ export interface GoogleUserRequest {
 export interface userList{
     id: string,
     email: string,
-    userName: string,
-    passwordHash: string,
-    passwordSalt: string,
+    name: string,
 }
 export interface userMessage{
-    
     msgId: string,
     id:string,
     receiverId: string,

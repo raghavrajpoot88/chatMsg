@@ -47,21 +47,21 @@ export class UserListComponent implements OnInit {
       content:new FormControl(null,Validators.required)    
     })
     console.log(this.editform.value);
+
     this.searchform=new FormGroup({
       query:new FormControl(null ,Validators.required)
     })
 
+    //?Token value 
     this.tt = localStorage.getItem('token')!;
 
     //?Real-time implementation
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
     this._hubConnection=new HubConnectionBuilder().withUrl('https://localhost:7174/hub',{ accessTokenFactory: () => this.tt }).build();
-    // ,{ accessTokenFactory: () => this.token }
     this._hubConnection.start()
     .then(()=>
       console.log("Realtime connection started"))
-    // .then(()=>this.getConnectionId())
     .catch(error=>{
       console.log("Erroring occuring at connection establishment")
     });
@@ -74,10 +74,8 @@ export class UserListComponent implements OnInit {
   }
 
   sendMessage(){
-      // this.data.ReceiverId = msgList[0].receiverId; // Accessing receiverId of the first element
       this.data.MsgBody=this.messageform.get('MsgBody')?.value;
       console.log(this.data);
-      // this._hubConnection.invoke('NewMessage', this.data.ReceiverId, message);
       this.service.sendMessage(this.data).subscribe((result:userMessage)=>{
         console.log(result);
         
@@ -88,6 +86,7 @@ export class UserListComponent implements OnInit {
         console.log(this.msgList); 
         
         //! this._hubConnection.invoke('ReceiveMessage',this.connectionId, result);
+        //! Hub connection
         this._hubConnection.invoke('NewMessage', result);
 
         this.messageform.reset();
@@ -101,14 +100,15 @@ export class UserListComponent implements OnInit {
     console.log("Scrolling to the bottom");
   }
 
+  //* Get the User list.
   getList(){
     this.service.userList().subscribe(list=>{
       console.log(list);
       this.list=list;
-      // console.log(this.list[2].name);
     })
   }
   
+  //* Get conversation history of an user.
   getMessage(data:userList){
     this.location.replaceState(`/chat/user/${data.id}`);
     this.isUserMessage=true;
@@ -117,15 +117,13 @@ export class UserListComponent implements OnInit {
       this.data.ReceiverId=data.id
       
       console.log(result);
-      this.nameOfReceiver=data.userName;
-      console.log(data.userName);
+      this.nameOfReceiver=data.name;
+      console.log(data.name);
       this.sentmessage=null;
     })
-    // if(this.msgList.length===0){
-    //   this.isUserMessage=false;
-    // }
   }
 
+  //* create a div at coorddiante on right click.
    //? we create an object that contains coordinates
    menuTopLeftPosition =  {x: 0, y: 0}
    // reference to the MatMenuTrigger in the DOM
@@ -148,6 +146,7 @@ export class UserListComponent implements OnInit {
     this.matMenuTrigger.openMenu();
   }
 
+  //*Edit the message.
   EditMessage(msgId:string,content:string){
     const editMessageValue: editMessage = { content: content };
     console.log(editMessageValue);
@@ -162,6 +161,7 @@ export class UserListComponent implements OnInit {
     })
   } 
 
+  //* Delete the message.
   DeleteMessage(msgId:string){
     this.service.deleteMessage(this.editDeleteMessage).subscribe(result=>{
       console.log(result)
@@ -176,6 +176,7 @@ export class UserListComponent implements OnInit {
     })
   }
 
+  //* Search the messages.
   searchMessage(query:string){
       this.isUserMessage = false;
       this.service.searchMessages(query).subscribe((result:any) =>{
@@ -188,13 +189,12 @@ export class UserListComponent implements OnInit {
   shiftToSearch(){
     // if (this.searchform.dirty && this.searchform.touched && this.searchform.invalid) {
       this.isUserMessage = true;
-    // }
-
   }
-  NavigateToLog(){
-    this.router.navigate(['/log']);
-  }
+  
   handleFormClick(event: MouseEvent): void {
     event.stopPropagation();
+  }
+  logout(){
+    this.service.logout();
   }
 }

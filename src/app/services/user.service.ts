@@ -9,12 +9,27 @@ import { Observable } from 'rxjs';
 export class UserService {
 
   constructor(private http:HttpClient) { }
+  loggedIn:boolean=false;
+  login(){
+    this.loggedIn=true;
+  }
+  logout(){
+    localStorage.removeItem('token');
+    this.loggedIn=false;
+  }
+  isAuthenticated(){
+    return this.loggedIn;
+  }
+
+
   userRegistration(data: userInfo):Observable<userInfo>{
     return this.http.post<userInfo>("https://localhost:7174/api/User/register",data);
   }
+  
   userLogin(data:loginInfo):Observable<any>{
     return this.http.post<any>("https://localhost:7174/api/User/login",data);
   }
+
   googleLogin(googleUser: string):Observable<any>{
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
@@ -26,12 +41,12 @@ export class UserService {
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
     return this.http.get<any>("https://localhost:7174/api/User",{headers})
   }
+
+  //* Conversation history
   userMessage(data:string):Observable<any>{
-    // data:UserMessage
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)
     return this.http.get<any>(`https://localhost:7174/api/MessageInfo?UserId=${data}&count=${20}&sort=asc`,{headers})
-    // https://localhost:7174/api/MessageInfo?UserId=${data.UserId}&before=${data.before}&count=${data.count}&sort=${data.sort}
   }
   
   sendMessage(data:sendMessage):Observable<any>{

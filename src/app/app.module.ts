@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { GoogleLoginProvider, SocialAuthServiceConfig} from '@abacritt/angularx-social-login';
 import { SocialLoginModule} from '@abacritt/angularx-social-login';
 import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { restrictGuard } from './restrict.guard';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,7 @@ import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
           }
         ],
       } as SocialAuthServiceConfig,
-    }
+    },restrictGuard 
   ],
   bootstrap: [AppComponent]
 })

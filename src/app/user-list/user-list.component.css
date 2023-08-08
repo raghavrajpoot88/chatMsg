@@ -1,3 +1,6 @@
+.setHeight{
+  flex: 1;
+}
 .button {
     margin: 0;
     height: auto;
@@ -13,7 +16,7 @@
     --animation-color: #37FF8B;
     --fs-size: 2em;
     letter-spacing: 3px;
-    margin-left: 15px;
+    margin-left: 22px;
     text-decoration: none;
     font-size: var(--fs-size);
     font-family: "Arial";
@@ -43,6 +46,9 @@
   .header{
     display: flex;
     background-color:#A2A378;
+    position: sticky;
+    top: 0;
+    
 
   }
   .search{
