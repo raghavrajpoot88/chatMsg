@@ -24,10 +24,11 @@ export class UserListComponent implements OnInit {
   data:sendMessage = { ReceiverId: "", MsgBody: "" };
 
   editDeleteMessage:string="";
-  isUserMessage:Boolean=true;
   nameOfReceiver:string='';
   tt !:string ;
   errorMessage:string='';
+  isUserMessage:Boolean=true;
+  checkLoader:Boolean=false;
   
   messageform!:FormGroup
   editform!:FormGroup
@@ -71,6 +72,21 @@ export class UserListComponent implements OnInit {
       console.log(data);
       console.log(this.msgList);
     })
+    this._hubConnection.on('ReceiveEditMessage',(Message:userMessage)=>{
+      const editedMsgIndex = this.msgList.findIndex(msg => msg.id === Message.id);
+      if (editedMsgIndex !== -1) {
+        this.msgList[editedMsgIndex].msgBody = Message.msgBody;
+        this.msgList = [...this.msgList];
+      }
+    })
+
+    this._hubConnection.on('ReceiveDeleteMessage',(data:userMessage)=>{
+      const indexToRemove = this.msgList.findIndex(item => item.id === data.id);
+      console.log(indexToRemove);
+      if (indexToRemove !== -1) {
+        this.msgList.splice(indexToRemove, 1);
+      }
+    })
   }
 
   sendMessage(){
@@ -90,16 +106,10 @@ export class UserListComponent implements OnInit {
         this._hubConnection.invoke('NewMessage', result);
 
         this.messageform.reset();
-        this.scrollToBottom();
       })
+      this.bottom();
   }
-  private scrollToBottom() {
-    if (this.bottomOfPageRef && this.bottomOfPageRef.nativeElement) {
-      this.bottomOfPageRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-    }
-    console.log("Scrolling to the bottom");
-  }
-
+  
   //* Get the User list.
   getList(){
     this.service.userList().subscribe(list=>{
@@ -120,6 +130,9 @@ export class UserListComponent implements OnInit {
       this.nameOfReceiver=data.name;
       console.log(data.name);
       this.sentmessage=null;
+
+      this.bottom();
+      this.checkLoader=false;
     })
   }
 
@@ -145,6 +158,30 @@ export class UserListComponent implements OnInit {
     //* we open the menu
     this.matMenuTrigger.openMenu();
   }
+
+  olderMessage(event:Event):void{
+    const scrollableDiv = document.querySelector('.scrollableDiv');
+    // if (scrollableDiv) {     
+      if (scrollableDiv!.scrollTop === 0 && this.msgList.length> 0) {
+        this.checkLoader=true;
+        setTimeout(()=>{
+          this.service.loadUserMessage( this.data.ReceiverId, this.msgList[0].timeStamp).subscribe((result) => {
+              console.log(result);
+              // this.msgList=result.concat(this.msgList);
+              if (result.length === 0) {
+                  this.checkLoader = false;
+                  alert("No more Message");
+              }
+              if (result.length > 0) {
+                // Append the new messages to the beginning of msgList
+                this.msgList = [...result, ...this.msgList];
+              }
+            });
+            this.checkLoader=false;
+        },2000);
+      // }
+  }
+}
 
   //*Edit the message.
   EditMessage(msgId:string,content:string){
@@ -196,5 +233,17 @@ export class UserListComponent implements OnInit {
   }
   logout(){
     this.service.logout();
+  }
+  private bottom():void{
+    setTimeout(()=>{
+      const scrollableDiv = document.querySelector('.scrollableDiv');
+  
+        // Access the scroll height of the scrollableDiv
+        if(scrollableDiv){
+        // scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+        scrollableDiv.scroll({ top: scrollableDiv.scrollHeight, behavior: 'smooth' });
+        console.log('Scroll height:', scrollableDiv.scrollHeight);
+        }
+      },100)
   }
 }

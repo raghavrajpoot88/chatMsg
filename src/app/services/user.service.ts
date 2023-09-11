@@ -2,20 +2,23 @@ import { Injectable } from '@angular/core';
 import { userMessage, loginInfo, userInfo, sendMessage, editMessage, GoogleUserRequest } from '../model/userInfo';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private route :Router) { }
   loggedIn:boolean=false;
   login(){
     this.loggedIn=true;
   }
   logout(){
     localStorage.removeItem('token');
-    this.loggedIn=false;
+    // this.loggedIn=false;
+    this.route.navigateByUrl('/login');
+
   }
   isAuthenticated(){
     return this.loggedIn;
@@ -49,6 +52,10 @@ export class UserService {
     return this.http.get<any>(`https://localhost:7174/api/MessageInfo?UserId=${data}&count=${20}&sort=asc`,{headers})
   }
   
+  loadUserMessage(data:string,time:string):Observable<any>{
+    let headers=new HttpHeaders().set("Authorization", `Bearer ${localStorage.getItem('token')}`);
+    return this.http.get<any>(`https://localhost:7174/api/MessageInfo?UserId=${data}&before=${time}&count=${20}&sort=asc`,{headers})
+  }
   sendMessage(data:sendMessage):Observable<any>{
     let headers=new HttpHeaders()
     .set("Authorization",`bearer ${localStorage.getItem('token')}`)

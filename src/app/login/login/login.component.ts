@@ -33,7 +33,7 @@ constructor(private service:UserService, private router :Router ,private authSer
     this.user=result;
     console.log(this.user);
     console.log(this.user.idToken);
-    
+   
     this.SignInWithGoolgle()
    })
   }
@@ -67,6 +67,7 @@ constructor(private service:UserService, private router :Router ,private authSer
   SignInWithGoolgle():void {
     this.service.googleLogin(this.user.idToken).subscribe((data)=>{
       console.log("inside signin");
+      this.service.login();
       console.log(data);
       if(data.token){
         this.router.navigate(["/chat"])

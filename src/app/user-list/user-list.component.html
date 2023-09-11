@@ -82,7 +82,7 @@
             
             <div class="d-lg-flex w-100  flex-column offcanvas-body  cententdiv"  id="bottomofpage" *ngIf="nameOfReceiver">
                 <div class="receiverTitle fw-bold">{{nameOfReceiver}}</div>
-                <div class="flex-grow-1 px-2 overflow-auto" >
+                <div class="flex-grow-1 px-2 overflow-auto scrollableDiv" (scroll)="olderMessage($event)" >
                     <ng-container *ngFor="let msg of msgList" >
                         <div class="card mb-2 " (contextmenu)="onRightClick($event, msg)"
                         [ngClass]="{'receiver-message': msg.receiverId !== data.ReceiverId, 'sender-message': msg.receiverId === data.ReceiverId}">
@@ -97,6 +97,9 @@
                     </ng-container>
                 </div>
             </div>
+            <div class="loader-container" *ngIf="checkLoader">
+                <div class="loader" ></div>
+              </div>
             <div style="visibility: hidden; position: fixed;"
                 [style.left.px]="menuTopLeftPosition.x"
                 [style.top.px]="menuTopLeftPosition.y"
